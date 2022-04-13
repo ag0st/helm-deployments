@@ -2,6 +2,7 @@ apiVersion: autoscaling/v2beta2
 kind: HorizontalPodAutoscaler
 metadata:
   name: txtextractor-hpa
+  namespace: broker
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
@@ -16,8 +17,7 @@ spec:
         name: queue-length
         selector: {
           matchLabels: {
-            channel: "s1-request",
-            type: "queues"
+            kubernetes_namespace: "broker",
           }
         }
       target:

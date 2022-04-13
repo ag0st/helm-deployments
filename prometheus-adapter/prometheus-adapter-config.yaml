@@ -3,27 +3,24 @@ rules:
   external:
   - seriesQuery: '{__name__=~"broker_requests_waiting.*"}'
     resources:
-      overrides:
-        kubernetes_namespace:
-          resource: namespace
-        kubernetes_pod_name:
-          resource: pod
+       overrides:
+         kubernetes_namespace: {resource: "namespace"}
+         kubernetes_pod_name: {resource: "pod"}
     name:
-      matches: "^(.*)"
+      matches: ""
       as: "queue-length"
     metricsQuery: sum(broker_requests_waiting{<<.LabelMatchers>>})
-  - seriesQuery: '{__name__=~"broker_callers_running.*"}'
+
+  - seriesQuery: 'broker_callers_running{kubernetes_namespace!="",kubernetes_pod_name!=""}'
     resources:
-      overrides:
-        kubernetes_namespace:
-          resource: namespace
-        kubernetes_pod_name:
-          resource: pod
+       overrides:
+         kubernetes_namespace: {resource: "namespace"}
+         kubernetes_pod_name: {resource: "pod"}
     name:
-      matches: "^(.*)"
       as: "queue-length-2"
-    metricsQuery: sum(broker_callers_running{})
+    metricsQuery: sum(<<.Series>>{<<.LabelMatchers>>})
 
 prometheus:
   url: http://prometheus-service.prometheus.svc.cluster.local
+  path: /prom
   port: 8080

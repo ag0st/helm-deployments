@@ -17,7 +17,7 @@ data:
       path: '/metrics'
 
     app:
-      text_extractor_url: 'http://txtextractor-service.txtextractor.svc.cluster.local'
+      text_extractor_url: 'http://txtextractor-service.broker.svc.cluster.local'
       text_analyzer_url: 'http://analyzer-service.analyzer.svc.cluster.local'
       raw_file_storage: '/tmp'
       task_queue_length: 10000
