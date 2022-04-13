@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.deployment.name  }}
+  namespace: {{ .Values.deployment.namespace  }}
+  labels:
+    app: {{ .Values.app.selector }}
+spec:
+  replicas: {{ .Values.app.replicaCount | default 1 }}
+  selector:
+    matchLabels:
+      app: {{ .Values.app.selector }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.app.selector }}
+    spec:
+      containers:
+        - name: {{ .Values.deployment.containers.name }}
+          image: "agost/pa.client:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
