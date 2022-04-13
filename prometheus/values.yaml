@@ -24,10 +24,10 @@ config:
 
 scrape:
   interval: 2
-  service: proxy-service
-  namespace: default
+  service: broker-service
+  namespace: broker
   port: 8080
-  name: scrape_proxy
+  name: scrape_broker
 
 service:
   name: prometheus-service
