@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.config.name }}
+  labels:
+    name: {{ .Values.config.name }}
+  namespace: {{ .Values.deployment.namespace }}
+data:
+  config.yaml: |
+    logging:
+      # 0 = NONE; 1 = INFO; 2 = WARNING; 3 = ERROR; 4 = DEBUG
+      level: 3
+      profiling: false
+
+    server:
+      address: ':8080'
+      path: '/'

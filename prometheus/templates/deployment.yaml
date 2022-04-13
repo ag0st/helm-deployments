@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.deployment.name }}
+  namespace: {{ .Values.deployment.namespace }}
+  labels:
+    app: {{ .Values.app.selector }}
+spec:
+  replicas: {{ .Values.app.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.app.selector }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.app.selector }}
+    spec:
+      containers:
+        - name: {{ .Values.deployment.containers.name }}
+          image: prom/prometheus
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args:
+            - "--config.file=/etc/prometheus/prometheus.yml"
+            - "--storage.tsdb.path=/prometheus/"
+            - "--web.external-url=https://k8s.limitedbrain.com/prom"
+            - "--web.route-prefix=/prom"
+          ports:
+            - containerPort: {{ .Values.deployment.containers.port }}
+          volumeMounts:
+            - name: prometheus-config-volume
+              mountPath: /etc/prometheus/
+            - name: prometheus-storage-volume
+              mountPath: /prometheus/
+      volumes:
+        - name: prometheus-config-volume
+          configMap:
+            defaultMode: 420
+            name: {{ .Values.config.name }}
+        - name: prometheus-storage-volume
+          emptyDir: {}

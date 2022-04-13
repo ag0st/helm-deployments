@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.config.name }}
+  labels:
+    name: {{ .Values.config.name }}
+  namespace: {{ .Values.deployment.namespace }}
+data:
+  config.yaml: |
+    logging:
+      # 0 = NONE; 1 = INFO; 2 = WARNING; 3 = ERROR; 4 = DEBUG
+      level: 3
+      profiling: false
+
+    metrics:
+      export: true
+      path: '/metrics'
+
+    app:
+      text_extractor_url: 'http://txtextractor-service.txtextractor.svc.cluster.local'
+      text_analyzer_url: 'http://analyzer-service.analyzer.svc.cluster.local'
+      raw_file_storage: './tmp'
+      task_queue_length: 10000
+      scaling:
+        max_replica: 16
+        min_replica: 8
+        check_interval: 2s
+        scale_down:
+          kind: QueueLength
+          period: 20s
+          value: 0
+          many: 4
+        scale_up:
+          kind: QueueLength
+          period: 2s
+          value: 5
+          many: 8
+
+    server:
+      address: ':8080'
+      path: '/broker'

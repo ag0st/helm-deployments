@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.deployment.name  }}
+  namespace: {{ .Values.deployment.namespace  }}
+  labels:
+    app: {{ .Values.app.selector }}
+spec:
+  replicas: {{ .Values.app.replicaCount | default 1 }}
+  selector:
+    matchLabels:
+      app: {{ .Values.app.selector }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.app.selector }}
+    spec:
+      volumes:
+        - name: config-volume
+          configMap:
+            name: {{ .Values.config.name }}
+      containers:
+        - name: {{ .Values.deployment.containers.name }}
+          image: "agost/pa.dummy:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+          - name: CONFIG_FILE
+            value: "/etc/dummy/config.yaml"
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: config-volume
+              mountPath: /etc/dummy/config.yaml
+              subPath: config.yaml
+            - name: config-volume
+              mountPath: /root/config.yaml
+              subPath: config.yaml

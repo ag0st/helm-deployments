@@ -1,0 +1,61 @@
+# Default values for prometheus.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+deployment:
+  name: prometheus-deployment
+  namespace: prometheus
+  containers:
+    name: prometheus
+    port: 9090
+
+app:
+  selector: prometheus-server
+  replicaCount: 1
+
+image:
+  pullPolicy: Always
+  tag: latest
+
+clusterRole:
+  name: prometheus
+
+config:
+  name: prometheus-server-conf
+
+scrape:
+  interval: 2
+  service: proxy-service
+  namespace: default
+  port: 8080
+  name: scrape_proxy
+
+service:
+  name: prometheus-service
+  port: 8080
+  type: ClusterIP
+
+ingress:
+  enabled: true
+  name: prometheus-ingress
+  labels: {}
+  annotations: {
+    nginx.ingress.kubernetes.io/auth-type: basic,
+    nginx.ingress.kubernetes.io/auth-secret: prom-auth-admin,
+    nginx.ingress.kubernetes.io/auth-realm: 'Authentication Required - Admin'
+  }
+
+  hosts:
+   []
+   # - dummy.example.com
+  paths:
+    - /prom
+    - /prom/graph
+  extraPaths:
+    []
+    # - path: /*
+    #   pathType: Prefix
+    #   backend:
+    #     service
+    #       name: ssl-redirect
+    #       port:
+    #         name: use-annotation
