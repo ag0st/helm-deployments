@@ -1,32 +1,29 @@
-prometheus:
-  url: http://prometheus-service.prometheus.svc
-  port: 8080
 rules:
+  default: false
   external:
   - seriesQuery: '{__name__=~"broker_requests_waiting.*"}'
     resources:
       overrides:
-        namespace:
+        kubernetes_namespace:
           resource: namespace
-        pod:
+        kubernetes_pod_name:
           resource: pod
     name:
-      matches: ^(.*)
+      matches: "^(.*)"
       as: "queue-length"
-    metricsQuery: sum(kubemq_messages_count{})
-  ####################### WARNING: queue-length is not guarantee
-  #- seriesQuery: '{__name__=~"kubemq_messages_count.*"}'
-  #  resources:
-  #    overrides:
-  #      namespace:
-  #        resource: namespace
-  #      pod:
-  #        resource: pod
-  #  name:
-  #    matches: ^(.*)
-  #    as: "queue-length"
-  #  metricsQuery: sum(kubemq_messages_count{<< range $key, $value := .LabelValuesByName >><< if ne $key "namespace" >><< $key >>="<< $value >>",<< end >><< end >>side="send"})-sum(kubemq_messages_count{<< range $key, $value := .LabelValuesByName >><< if ne $key "namespace" >><< $key >>="<< $value >>",<< end >><< end >>side="receive"})
+    metricsQuery: sum(broker_requests_waiting{<<.LabelMatchers>>})
+  - seriesQuery: '{__name__=~"broker_callers_running.*"}'
+    resources:
+      overrides:
+        kubernetes_namespace:
+          resource: namespace
+        kubernetes_pod_name:
+          resource: pod
+    name:
+      matches: "^(.*)"
+      as: "queue-length-2"
+    metricsQuery: sum(broker_callers_running{})
 
-# For the metric queries function, this is a workaround to an issue on external metrics on prometheus-adaper:
-# workaround proposition: https://github.com/kubernetes-sigs/prometheus-adapter/issues/255#issuecomment-601955919
-# Issue: https://github.com/kubernetes-sigs/prometheus-adapter/issues/282
+prometheus:
+  url: http://prometheus-service.prometheus.svc.cluster.local
+  port: 8080
