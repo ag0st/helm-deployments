@@ -3,9 +3,10 @@ rules:
   external:
   - seriesQuery: '{__name__=~"broker_requests_waiting.*"}'
     resources:
-       overrides:
-         kubernetes_namespace: {resource: "namespace"}
-         kubernetes_pod_name: {resource: "pod"}
+      namespaced: false
+      # overrides:
+      #   kubernetes_namespace: {resource: "namespace"}
+      #   kubernetes_pod_name: {resource: "pod"}
     name:
       matches: ""
       as: "queue-length"
@@ -13,9 +14,10 @@ rules:
 
   - seriesQuery: 'broker_callers_running{kubernetes_namespace!="",kubernetes_pod_name!=""}'
     resources:
-       overrides:
-         kubernetes_namespace: {resource: "namespace"}
-         kubernetes_pod_name: {resource: "pod"}
+      namespaced: false
+      # overrides:
+      #   kubernetes_namespace: {resource: "namespace"}
+      #   kubernetes_pod_name: {resource: "pod"}
     name:
       as: "queue-length-2"
     metricsQuery: sum(<<.Series>>{<<.LabelMatchers>>})

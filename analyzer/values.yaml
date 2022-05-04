@@ -7,7 +7,7 @@ image:
 
 deployment:
   name: analyzer
-  namespace: analyzer
+  namespace: broker
   containers:
     name: analyzer
 

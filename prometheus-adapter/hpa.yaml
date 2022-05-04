@@ -15,19 +15,19 @@ spec:
     external:
       metric:
         name: queue-length
-        selector: {
-          matchLabels: {
-            kubernetes_namespace: "broker",
-          }
-        }
       target:
         type: Value
-        value: 0.05
+        value: 5
   behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 0
+      policies:
+      - type: Pods
+        value: 4
+        periodSeconds: 2
     scaleDown:
-      stabilizationWindowSeconds: 30 # 30 secs
+      stabilizationWindowSeconds: 10 # 30 secs
       policies:
       - type: Pods
         value: 2
-        periodSeconds: 30 # wait 30 seconds before scaling down (2 by 2)
-      selectPolicy: Min
+        periodSeconds: 2 # wait 30 seconds before scaling down (2 by 2)
