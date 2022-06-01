@@ -12,6 +12,68 @@ data:
       level: 3
       profiling: false
 
+    metrics:
+      csv:
+        export: true
+        path: 'metrics.csv'
+      prometheus:
+        export: true
+        path: '/metrics'
+      log: false
+
+    app:
+      queues:
+        fileQ_length: 20
+        contentQ_length: 10000
+      file_processor:
+        replica: 2
+        interval:
+          # xx yy : where xx is an int and yy is one of B, KBi, MBi, GBi (max: 1.5Gi)
+          size: 12 KBi
+          # xx yy : where xx is an int and yy is one of B, KBi, MBi, GBi (max: 1.5Gi)
+          overlapping_size: 20 B
+      scanner:
+        scaling:
+          max_replica: 16
+          min_replica: 8
+          check_interval: 2s
+          scale_down:
+            kind: QueueLength
+            period: 20s
+            value: 0
+            many: 4
+          scale_up:
+            kind: QueueLength
+            period: 2s
+            value: 5
+            many: 8
+
+    scanning:
+      dcm:
+        regexp:
+          - 'CH\d{2}.?\d{4}.?\d\w{2}.?\w{4}.?\w{4}.?\w'
+          - '756.?\d{4}.?\d{4}.?\d{2}'
+          - '00\d{1,3}.?\d{2}.?\d{3}.?\d{2}.?\d{2}'
+          - '\+\d{1,3}\d.?\d{2}.?\d{2}.?\d{3}.?\d{2}.?\d{2}'
+          - '0\d{2}.?\d{3}.?\d{2}.?\d{2}'
+        # must all match in the dcm considered as sensitive data (without checking EDM default: false)
+        consider_match_as_sensitive: false
+      edm:
+        # SHA256 or BLAKE3 (BLAKE3 is 60% faster)
+        hash_method: BLAKE3
+        generated: false
+        in_memory: false
+        # The file must contains 32 bits hashes sorted ascending if (generated = in_memory = false)
+        # Not mandatory if in_memory == true as it will not be used
+        hashes_file: 'hashes.bin'
+
     server:
+      tls:
+        enabled: false
+        cert_path: './certs/localhost.crt'
+        key_path: './certs/localhost.key'
       address: ':8080'
-      path: '/'
+      upload:
+        url: '/'
+        # xx yy : where xx is an int and yy is one of B, KBi, MBi, GBi (max: 1.5Gi)
+        max_in_memory_size: 100 MBi

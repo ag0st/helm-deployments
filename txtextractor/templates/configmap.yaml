@@ -12,6 +12,9 @@ data:
       level: 3
       profiling: false
 
+    app:
+      raw_file_storage: '/tmp/extracted'
+
     server:
       address: ':8080'
       path: '/'
