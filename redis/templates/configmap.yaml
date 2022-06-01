@@ -6,4 +6,4 @@ metadata:
     name: {{ .Values.config.name }}
   namespace: {{ .Values.deployment.namespace }}
 data:
-  redis-config.yaml: ""
+  redis-config: ""
