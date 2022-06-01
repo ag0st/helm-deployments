@@ -1,0 +1,44 @@
+# Default values for helm-proxy-v2.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+image:
+  pullPolicy: Always
+
+deployment:
+  name: redis
+  namespace: broker
+  containers:
+    name: redis
+
+app:
+  selector: redis
+
+config:
+  name: redis-config
+
+service:
+  name: redis-service
+  type: ClusterIP
+  port: 6379
+
+ingress:
+  enabled: false
+  name: redis-ingress
+  labels: {}
+  annotations: {
+    nginx.ingress.kubernetes.io/proxy-body-size: 0
+  }
+  hosts:
+   []
+   # - broker.example.com
+  paths:
+    - /redis
+  extraPaths:
+    []
+    # - path: /*
+    #   pathType: Prefix
+    #   backend:
+    #     service
+    #       name: ssl-redirect
+    #       port:
+    #         name: use-annotation

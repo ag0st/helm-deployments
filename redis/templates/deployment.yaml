@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.deployment.name  }}
+  namespace: {{ .Values.deployment.namespace  }}
+  labels:
+    app: {{ .Values.app.selector }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.app.selector }}
+      role: master
+      tier: backend
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.app.selector }}
+        role: master
+        tier: backend
+    spec:
+      volumes:
+        - name: data
+          emptyDir: {}
+        - name: config-volume
+          configMap:
+            name: {{ .Values.config.name }}
+            items:
+              - key: redis-config
+                path: redis.conf
+      containers:
+        - name: {{ .Values.deployment.containers.name }}
+          image: redis
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+            - redis-server
+            - "/redis-master/redis.conf"
+          env:
+          - name: MASTER
+            value: "true"
+          ports:
+            - containerPort: 6379
+          volumeMounts:
+            - name: config-volume
+              mountPath: /redis-master
+            - name: data
+              mountPath: /redis-master-data

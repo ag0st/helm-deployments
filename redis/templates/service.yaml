@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.service.name }}
+  namespace: {{ .Values.deployment.namespace }}
+  labels:
+    app: {{ .Values.app.selector }}
+    role: master
+    tier: backend
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: 6379
+      protocol: TCP
+  selector:
+    app: {{ .Values.app.selector }}
+    role: master
+    tier: backend

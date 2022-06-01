@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.config.name }}
+  labels:
+    name: {{ .Values.config.name }}
+  namespace: {{ .Values.deployment.namespace }}
+data:
+  redis-config.yaml: ""
