@@ -16,6 +16,9 @@ spec:
         app: {{ .Values.app.selector }}
     spec:
       volumes:
+        - name: file-storage-vol
+          persistentVolumeClaim:
+            claimName: file-storage-claim
         - name: config-volume
           configMap:
             name: {{ .Values.config.name }}
@@ -37,6 +40,8 @@ spec:
           ports:
             - containerPort: 8080
           volumeMounts:
+            - name: file-storage-vol
+              mountPath: "/tmp"
             - name: config-volume
               mountPath: /etc/broker/config.yaml
               subPath: config.yaml

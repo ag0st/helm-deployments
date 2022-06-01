@@ -33,7 +33,8 @@ ingress:
    []
    # - broker.example.com
   paths:
-    - /broker
+    - /broker/upload
+    - /broker/adaptive
   extraPaths:
     []
     # - path: /*

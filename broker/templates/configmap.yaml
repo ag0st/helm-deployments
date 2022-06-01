@@ -19,23 +19,11 @@ data:
     app:
       text_extractor_url: 'http://txtextractor-service.broker.svc.cluster.local'
       text_analyzer_url: 'http://analyzer-service.broker.svc.cluster.local'
+      redis_url: 'http://redis-service.broker.svc.cluster.local:6379'
       raw_file_storage: '/tmp'
       task_queue_length: 10000
-      scaling:
-        max_replica: 16
-        min_replica: 8
-        check_interval: 2s
-        scale_down:
-          kind: QueueLength
-          period: 20s
-          value: 0
-          many: 4
-        scale_up:
-          kind: QueueLength
-          period: 2s
-          value: 5
-          many: 8
 
     server:
       address: ':8080'
-      path: '/broker'
+      upload_path: '/broker/upload'
+      adaptive_path: '/broker/adaptive'
