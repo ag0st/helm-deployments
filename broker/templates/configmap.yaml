@@ -9,7 +9,7 @@ data:
   config.yaml: |
     logging:
       # 0 = NONE; 1 = INFO; 2 = WARNING; 3 = ERROR; 4 = DEBUG
-      level: 3
+      level: 4
       profiling: false
 
     metrics:
