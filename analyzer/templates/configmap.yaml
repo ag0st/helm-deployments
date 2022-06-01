@@ -57,7 +57,7 @@ data:
           - '\+\d{1,3}\d.?\d{2}.?\d{2}.?\d{3}.?\d{2}.?\d{2}'
           - '0\d{2}.?\d{3}.?\d{2}.?\d{2}'
         # must all match in the dcm considered as sensitive data (without checking EDM default: false)
-        consider_match_as_sensitive: false
+        consider_match_as_sensitive: true
       edm:
         # SHA256 or BLAKE3 (BLAKE3 is 60% faster)
         hash_method: BLAKE3
