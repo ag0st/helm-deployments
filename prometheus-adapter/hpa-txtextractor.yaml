@@ -1,0 +1,33 @@
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: txtextractor-hpa
+  namespace: broker
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: txtextractor
+  minReplicas: 1
+  maxReplicas: 10
+  metrics:
+  - type: External
+    external:
+      metric:
+        name: queue-length
+      target:
+        type: Value
+        value: 5
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 0
+      policies:
+      - type: Pods
+        value: 4
+        periodSeconds: 2
+    scaleDown:
+      stabilizationWindowSeconds: 2 # 30 secs
+      policies:
+      - type: Pods
+        value: 2
+        periodSeconds: 2 # wait 30 seconds before scaling down (2 by 2)
