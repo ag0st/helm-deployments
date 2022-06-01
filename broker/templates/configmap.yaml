@@ -19,7 +19,7 @@ data:
     app:
       text_extractor_url: 'http://txtextractor-service.broker.svc.cluster.local'
       text_analyzer_url: 'http://analyzer-service.broker.svc.cluster.local'
-      redis_url: 'http://redis-service.broker.svc.cluster.local:6379'
+      redis_url: 'redis-service.broker.svc.cluster.local:6379'
       raw_file_storage: '/tmp'
       task_queue_length: 10000
 
