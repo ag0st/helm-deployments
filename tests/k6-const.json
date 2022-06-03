@@ -1,0 +1,13 @@
+{
+    "url": "http://127.0.0.1:8080/skanner/upload",
+    "files": {
+        "pdf":{
+            "positive": "./positive.pdf",
+            "negative": "./negative.pdf"
+        }
+    },
+    "response": {
+        "ok" : "OK",
+        "noOk": "NOK"
+    }
+}

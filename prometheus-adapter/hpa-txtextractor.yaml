@@ -17,7 +17,7 @@ spec:
         name: queue-length
       target:
         type: Value
-        value: 5
+        value: 2
   behavior:
     scaleUp:
       stabilizationWindowSeconds: 0

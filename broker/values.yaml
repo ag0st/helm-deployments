@@ -3,6 +3,7 @@
 # Declare variables to be passed into your templates.
 image:
   pullPolicy: Always
+  tag: 1.0.7
 
 deployment:
   name: broker
@@ -12,7 +13,7 @@ deployment:
 
 app:
   selector: broker
-  replicaCount: 1
+  replicaCount: 3
 
 config:
   name: broker-config
